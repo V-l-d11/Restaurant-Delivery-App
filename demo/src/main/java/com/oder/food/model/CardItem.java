@@ -32,4 +32,7 @@ public class CardItem {
     private List<IngredientsItem> ingredients;
 
      private Long totalPrice;
+
+    public void setIngredients(List<String> ingredients) {
+    }
 }
