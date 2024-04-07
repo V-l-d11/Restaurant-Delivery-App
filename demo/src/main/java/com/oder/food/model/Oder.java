@@ -40,7 +40,7 @@ public class Oder {
 
     private  int totalItem;
 
-    private int totalPrice;
+    private Long totalPrice;
 
   //  private Payment payment;
 

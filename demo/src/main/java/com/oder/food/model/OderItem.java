@@ -27,4 +27,7 @@ public class OderItem {
     @CollectionTable(name="order_item_ingredients", joinColumns = @JoinColumn(name="order_item_id"))
     @Column(name="ingredient")
     private List<String> ingredients;
+
+    public void setIngredients(List<IngredientsItem> ingredients) {
+    }
 }

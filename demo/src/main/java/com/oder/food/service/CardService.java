@@ -17,9 +17,9 @@ public interface CardService {
 
     public Card findCardById(Long id) throws  Exception;
 
-    public Card findCardByUserId(String jwt) throws  Exception;
+    public Card findCardByUserId(Long userId) throws  Exception;
 
-    public Card clearCard(String jwt) throws  Exception;
+    public Card clearCard(Long userId) throws  Exception;
 
 
 }

@@ -2,9 +2,11 @@ package com.oder.food.controller;
 
 import com.oder.food.model.Card;
 import com.oder.food.model.CardItem;
+import com.oder.food.model.User;
 import com.oder.food.requests.AddCardItemRequest;
 import com.oder.food.requests.UpdateCardItemRequest;
 import com.oder.food.service.CardService;
+import com.oder.food.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,11 @@ public class CardController {
 
     @Autowired
     private CardService cardService;
+
+
+
+    @Autowired
+    private UserService userService;
 
     @PutMapping("/card/add")
     public ResponseEntity<CardItem> addItemToCard(@RequestBody AddCardItemRequest req,
@@ -50,7 +57,8 @@ public class CardController {
 
             @RequestHeader("Authorization") String jwt) throws Exception {
 
-        Card card=cardService.clearCard(jwt);
+        User user=userService.findUserByJwtToken(jwt);
+        Card card=cardService.clearCard(user.getId());
         return new ResponseEntity<>(card, HttpStatus.OK);
     }
 
@@ -59,8 +67,9 @@ public class CardController {
     public ResponseEntity<Card> findUserCard(
 
             @RequestHeader("Authorization") String jwt) throws Exception {
+        User user=userService.findUserByJwtToken(jwt);
 
-        Card card=cardService.findCardByUserId(jwt);
+        Card card=cardService.findCardByUserId(user.getId());
         return new ResponseEntity<>(card, HttpStatus.OK);
     }
 

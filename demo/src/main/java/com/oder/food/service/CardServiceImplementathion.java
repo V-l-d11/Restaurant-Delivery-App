@@ -117,16 +117,18 @@ public class CardServiceImplementathion implements  CardService {
     }
 
     @Override
-    public Card findCardByUserId(String jwt) throws Exception {
-        User user=userService.findUserByJwtToken(jwt);
-        return cardRepository.findByCustomerId(user.getId());
+    public Card findCardByUserId(Long userId) throws Exception {
+        //User user=userService.findUserByJwtToken();
+        Card card= cardRepository.findByCustomerId(userId);
+        card.setTotal(calculateCardTotals(card));
+        return card;
     }
 
     @Override
-    public Card clearCard(String jwt) throws Exception {
-        User user=userService.findUserByJwtToken(jwt);
+    public Card clearCard(Long userId) throws Exception {
+    //    User user=userService.findUserByJwtToken(userId);
 
-        Card card=findCardByUserId(jwt);
+        Card card=findCardByUserId(userId);
         card.getItem().clear();
         return cardRepository.save(card);
     }
