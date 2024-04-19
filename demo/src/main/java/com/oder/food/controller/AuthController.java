@@ -81,6 +81,10 @@ public class AuthController {
 
         String username= req.getEmail();
         String password =req.getPassword();
+
+        System.out.println("Email Klient"+ username);
+        System.out.println("Password Klient" + password);
+
         Authentication authentication=authenticate(username,password);
 
         Collection<? extends GrantedAuthority> authorities=authentication.getAuthorities();
@@ -107,7 +111,16 @@ public class AuthController {
             throw new BadCredentialsException("password is an invalid....");
         }
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(){
+        try{
+            SecurityContextHolder.clearContext();
+            return ResponseEntity.ok("Logged out successfyly");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errror occureed while loging out");
+        }
+    }
+
 }

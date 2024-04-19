@@ -29,6 +29,13 @@ public class FoodController {
     private RestaurantService restaurantService;
 
 
+    @GetMapping("/search/food")
+    public ResponseEntity<List<Food>> searchFoodCustomer(@RequestParam String name) throws  Exception{
+         System.out.println("Search"+name);
+         List<Food> foods=foodService.searchFood(name);
+         return new ResponseEntity<>(foods, HttpStatus.OK);
+    }
+
     @GetMapping("/search")
     public ResponseEntity<List<Food>> searchFood(@RequestParam String name,@RequestHeader("Authorization") String jwt) throws  Exception{
 

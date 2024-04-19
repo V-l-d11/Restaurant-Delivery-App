@@ -24,7 +24,7 @@ public class CategoryController {
 
     @PostMapping("/admin/category")
     public ResponseEntity<Category> createCategory(@RequestBody Category category,
-                                                   @RequestHeader("Authorizarion") String jwt) throws  Exception{
+                                                   @RequestHeader("Authorization") String jwt) throws  Exception{
 
         User user=userService.findUserByJwtToken(jwt);
         Category createdCategory=categoryService.createCategory(category.getName(),user.getId());
