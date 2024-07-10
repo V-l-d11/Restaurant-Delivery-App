@@ -15,10 +15,27 @@ import java.util.function.Function;
 
 public interface RestaurantRepository extends JpaRepository<Restaurant,Long> {
 
-    @Query("SELECT r FROM Restaurant  r WHERE lower(r.name) LIKE lower(concat('%',:query,'%')) " +
-            "OR lower(r.cuisineType) LIKE lower(concat('%',:query,'%') ) ")
+
+    @Query("SELECT r FROM Restaurant r WHERE lower(r.name) LIKE lower(concat('%', :query, '%')) " +
+            "OR lower(r.cuisineType) LIKE lower(concat('%', :query, '%')) " +
+            "OR lower(r.address.city) LIKE lower(concat('%', :query, '%'))")
     List<Restaurant> findBySearchQuery(String query);
+
+
+    @Query("SELECT r FROM Restaurant r WHERE (:open IS NULL OR r.open = :open) " +
+            "AND (lower(r.name) LIKE lower(concat('%', :query, '%')) " +
+            "OR lower(r.cuisineType) LIKE lower(concat('%', :query, '%')) " +
+            "OR lower(r.address.city) LIKE lower(concat('%', :query, '%')))")
+    List<Restaurant> findBySearchQueryAndOpen(String query, Boolean open);
+
+
+
     Restaurant findByOwnerId(Long userId);
+
+
+
+
+
 
 
 

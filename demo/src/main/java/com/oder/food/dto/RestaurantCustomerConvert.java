@@ -18,6 +18,7 @@ public class RestaurantCustomerConvert {
         customerRestaurant.setOpeningHours(restaurant.getOpeningHours());
         customerRestaurant.setOpen(restaurant.isOpen());
         customerRestaurant.setFoods(restaurant.getFoods());
+        customerRestaurant.setImages(restaurant.getImages());
         return customerRestaurant;
     }
 }

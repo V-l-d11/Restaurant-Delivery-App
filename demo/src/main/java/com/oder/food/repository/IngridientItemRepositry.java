@@ -9,4 +9,6 @@ public interface IngridientItemRepositry  extends JpaRepository<IngredientsItem,
 
 List<IngredientsItem> findByRestaurantId(Long id);
 
+List<IngredientsItem> findByCategoryId(Long id);
+
 }

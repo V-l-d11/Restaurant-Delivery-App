@@ -9,10 +9,7 @@ import com.oder.food.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +47,35 @@ public class CustomerFoodController {
         }
 
         return new ResponseEntity<>(foodCustomers, HttpStatus.OK);
+    }
+
+    @GetMapping("/restaurant/{restaurantId}")
+    public ResponseEntity<List<FoodCustomer>> getRestaurantFoodCustomer(
+            @RequestParam (required = false) boolean vageterian,
+            @RequestParam (required = false) boolean seasonal,
+            @RequestParam(required = false) boolean nonveg,
+            @RequestParam(required = false) String foodCategory,
+            @PathVariable Long restaurantId
+
+    )throws  Exception{
+        List<Food> foods= foodService.getRestaurantsFood(restaurantId,vageterian,nonveg,seasonal,foodCategory);
+         List<FoodCustomer> foodCustomer=new ArrayList<>();
+
+         for(Food food:foods){
+             FoodCustomer customerFood=new FoodCustomer();
+             customerFood.setId(food.getId());
+             customerFood.setName(food.getName());
+             customerFood.setDescription(food.getDescription());
+             customerFood.setImages(food.getImages());
+             customerFood.setPrice(food.getPrice());
+             customerFood.setRestaurantId(food.getRestaurant().getId());
+             customerFood.setFoodCategoryId(food.getFoodCategory().getId());
+             customerFood.setAvailable(food.isAvailable());
+             foodCustomer.add(customerFood);
+
+         }
+
+        return new ResponseEntity<List<FoodCustomer>>(foodCustomer,HttpStatus.OK);
     }
 
 

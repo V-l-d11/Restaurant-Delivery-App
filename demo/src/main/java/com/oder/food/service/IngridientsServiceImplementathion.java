@@ -57,7 +57,7 @@ public class IngridientsServiceImplementathion implements  IngredientsService {
     }
 
     @Override
-    public IngredientsItem createIngridientItem(Long restaurantId, String ingridientName, Long categoryId) throws Exception {
+    public IngredientsItem createIngridientItem(Long restaurantId, String ingridientName, Long categoryId, Long price) throws Exception {
      Restaurant restaurant=restaurantService.findRestaurantById(restaurantId);
      IngridientsCategory category=findIngridientCategoryById(categoryId);
 
@@ -65,6 +65,7 @@ public class IngridientsServiceImplementathion implements  IngredientsService {
      item.setName(ingridientName);
      item.setRestaurant(restaurant);
      item.setCategory(category);
+     item.setPrice(price);
 
 
      IngredientsItem ingredient=ingridientItemRepositry.save(item);
@@ -88,6 +89,28 @@ public class IngridientsServiceImplementathion implements  IngredientsService {
         ingredientsItem.setInStoke(!ingredientsItem.isInStoke());
 
         return  ingridientItemRepositry.save(ingredientsItem);
+    }
+
+
+    @Override
+   public void deleteIngredientCategory(Long id) throws  Exception{
+        IngridientsCategory category=findIngridientCategoryById(id);
+        List<IngredientsItem> items = ingridientItemRepositry.findByCategoryId(id);
+
+        for(IngredientsItem item: items){
+            ingridientItemRepositry.delete(item);
+        }
+        ingridientsCategoryRepositry.delete(category);
+    }
+
+    @Override
+    public  void deleteIngredientItem(Long id) throws Exception{
+        Optional<IngredientsItem> optionalItem= ingridientItemRepositry.findById(id);
+
+        if(optionalItem.isEmpty()){
+            throw  new Exception("Ingrdient item not found");
+        }
+        ingridientItemRepositry.delete(optionalItem.get());
     }
 
 }

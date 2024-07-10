@@ -2,12 +2,16 @@ package com.oder.food.service;
 
 import com.oder.food.dto.RestaurantDto;
 import com.oder.food.model.Address;
+import com.oder.food.model.ContactInfo;
 import com.oder.food.model.Restaurant;
 import com.oder.food.model.User;
 import com.oder.food.repository.AddresRepositry;
+
 import com.oder.food.repository.RestaurantRepository;
 import com.oder.food.repository.UserRepository;
 import com.oder.food.requests.CreateRestaurantRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +21,8 @@ import java.util.Optional;
 
 @Service
 public class RestaurantServiceImplement  implements RestaurantService{
+
+    private static final Logger logger = LoggerFactory.getLogger(RestaurantServiceImplement.class);
 
     @Autowired
     private RestaurantRepository restaurantRepository;
@@ -32,7 +38,7 @@ public class RestaurantServiceImplement  implements RestaurantService{
     public Restaurant createRestaurant(CreateRestaurantRequest req, User user) {
 
         Address address= addresRepositry.save(req.getAddress());
-
+        logger.info("Saved address: {}", address);
         Restaurant restaurant= new Restaurant();
 
         restaurant.setAddress(address);
@@ -45,28 +51,41 @@ public class RestaurantServiceImplement  implements RestaurantService{
         restaurant.setRegistristrationDate(LocalDateTime.now());
         restaurant.setOwner(user);
 
+
         return restaurantRepository.save(restaurant);
     }
 
     @Override
     public Restaurant updateRestaurant(Long restaurantId, CreateRestaurantRequest updatedRestaurant) throws Exception {
 
-        Restaurant restaurant=findRestaurantById(restaurantId);
+        Restaurant restaurant = findRestaurantById(restaurantId);
 
-        if(restaurant.getCuisineType()!=null){
-            restaurant.setCuisineType(updatedRestaurant.getCuisineType());
-        }
+        if (updatedRestaurant != null) {
 
-        if(restaurant.getDescription()!=null){
-            restaurant.setDescription(updatedRestaurant.getDescription());
-        }
-
-        if(restaurant.getName()!=null){
             restaurant.setName(updatedRestaurant.getName());
+            restaurant.setDescription(updatedRestaurant.getDescription());
+            restaurant.setCuisineType(updatedRestaurant.getCuisineType());
+            restaurant.setOpeningHours(updatedRestaurant.getOpiningHours());
+            restaurant.setImages(updatedRestaurant.getImages());
+            restaurant.setRegistristrationDate(updatedRestaurant.getRegister());
+
+
+            if (updatedRestaurant.getAddress() != null) {
+                Address updatedAddress = updatedRestaurant.getAddress();
+                Address savedAddress = addresRepositry.save(updatedAddress);
+                restaurant.setAddress(savedAddress);
+            }
+
+
+            if (updatedRestaurant.getContactInformathion() != null) {
+                restaurant.setContactInformathion(updatedRestaurant.getContactInformathion());
+            }
         }
 
+        // Сохраняем ресторан
         return restaurantRepository.save(restaurant);
     }
+
 
     @Override
     public void deleteRestaurant(Long restaurantId) throws Exception {
@@ -97,13 +116,17 @@ public class RestaurantServiceImplement  implements RestaurantService{
 
     @Override
     public Restaurant getRestaurantByUserId(Long userId) throws Exception {
+        System.out.println(userId+ "USERID INTO SERVICE");
         Restaurant restaurant =restaurantRepository.findByOwnerId(userId);
+        System.out.println(restaurant+ "Restaurant INTO SERVICE");
         if(restaurant ==null){
             throw  new Exception("Restaurant not found with owner id"+userId);
         }
 
         return  restaurant;
     }
+
+
 
     @Override
     public RestaurantDto addToFavorites(Long restaurantId, User user) throws Exception {
@@ -112,7 +135,7 @@ public class RestaurantServiceImplement  implements RestaurantService{
 
         RestaurantDto dto=new RestaurantDto();
         dto.setDescription(restaurant.getDescription());
-        //dto.setImages(restaurant.getImages());
+       // dto.setImages(restaurant.getImages());
         dto.setTitle(restaurant.getName());
         dto.setId(restaurantId);
 

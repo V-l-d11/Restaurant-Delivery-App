@@ -33,7 +33,8 @@ public class IngridientContrloller {
     public ResponseEntity<IngredientsItem> createIngedientItem(
             @RequestBody IngredientRequest req
     ) throws Exception {
-        IngredientsItem item=ingredientsService.createIngridientItem(req.getRestaurantId(),req.getName(),req.getCategoryId());
+        System.out.println(req+ "requesrt------");
+        IngredientsItem item=ingredientsService.createIngridientItem(req.getRestaurantId(),req.getName(),req.getCategoryId(), req.getPrice());
         return new ResponseEntity<>(item, HttpStatus.CREATED);
     }
 
@@ -62,5 +63,20 @@ public class IngridientContrloller {
         return new ResponseEntity<>(items, HttpStatus.OK);
     }
 
+    @DeleteMapping("/category/{id}")
+    public ResponseEntity<Void> deleteIngredientCategory(
+            @PathVariable Long id
+    ) throws Exception{
+        ingredientsService.deleteIngredientCategory(id);
+        return  new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteIngredientItem(
+            @PathVariable Long id
+    ) throws Exception{
+        ingredientsService.deleteIngredientItem(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }

@@ -55,11 +55,22 @@ public class CustomerRestaurantController {
         return new ResponseEntity<>(customerRestaurants, HttpStatus.OK);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Restaurant> findRestaurantById(
+    public ResponseEntity<RestaurantCustomer> findRestaurantById(
             @PathVariable Long id
     ) throws  Exception{
         Restaurant restaurant= restaurantService.findRestaurantById(id);
-        return new ResponseEntity<>(restaurant, HttpStatus.OK);
+        RestaurantCustomer restaurantCustomer= new RestaurantCustomer();
+        restaurantCustomer.setId(restaurant.getId());
+        restaurantCustomer.setOpen(restaurant.isOpen());
+        restaurantCustomer.setName(restaurant.getName());
+        restaurantCustomer.setImages(restaurant.getImages());
+        restaurantCustomer.setOpeningHours(restaurant.getOpeningHours());
+        restaurantCustomer.setAddress(restaurant.getAddress());
+        restaurantCustomer.setContactInformathion(restaurant.getContactInformathion());
+        restaurantCustomer.setCuisineType(restaurant.getCuisineType());
+        restaurantCustomer.setDescription(restaurant.getDescription());
+        restaurantCustomer.setFoods(restaurant.getFoods());
+        return new ResponseEntity<>(restaurantCustomer, HttpStatus.OK);
     }
 
 }

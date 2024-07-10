@@ -6,6 +6,7 @@ import com.oder.food.dto.RestaurantDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import javax.persistence.ElementCollection;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class User {
     private  String password;
 
 
-    private USER_ROL role=USER_ROL.ROLE_CUSTOMER;
+    private USER_ROL role=USER_ROL.ROLE_RESTAURANT_OWNER;
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "customer")
@@ -41,6 +42,7 @@ public class User {
 
     @OneToMany(cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Address> adresses=new ArrayList<>();
+
 
 
 }

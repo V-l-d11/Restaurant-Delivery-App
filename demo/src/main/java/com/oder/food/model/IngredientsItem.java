@@ -19,6 +19,7 @@ public class IngredientsItem {
 
     private String name;
 
+    @JsonIgnore
     @ManyToOne
     private IngridientsCategory category;
 
@@ -27,6 +28,8 @@ public class IngredientsItem {
     private Restaurant restaurant;
 
     private boolean inStoke= true;
+
+    private Long price;
 
 
 }

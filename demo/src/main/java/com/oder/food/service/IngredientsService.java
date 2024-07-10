@@ -14,11 +14,15 @@ public interface IngredientsService {
 
     public List<IngridientsCategory> findIngridientCategoryByRestaurantId(Long id) throws  Exception;
 
-    public IngredientsItem createIngridientItem(Long restaurantId, String  ingridientName, Long categoryId) throws  Exception;
+    public IngredientsItem createIngridientItem(Long restaurantId, String  ingridientName, Long categoryId, Long price) throws  Exception;
 
     public List<IngredientsItem> findRestaurantsIngredients(Long restaurantId);
 
 
     public IngredientsItem updateSrock(Long id) throws  Exception;
+
+     public  void deleteIngredientCategory(Long id) throws  Exception;
+
+     public void deleteIngredientItem(Long id) throws  Exception;
 
 }

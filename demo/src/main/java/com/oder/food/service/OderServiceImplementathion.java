@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,41 +48,44 @@ public class OderServiceImplementathion  implements  OderService{
           userRepository.save(user);
         }
 
+
         Restaurant restaurant= restaurantService.findRestaurantById(order.getRestaurantId());
 
-        Oder createdOder= new Oder();
-        createdOder.setCustomer(user);
-        createdOder.setCreateAt(new Date());
-        createdOder.setOderStatus("PENDING");
-        createdOder.setDeliveryAddress(savedAddress);
-        createdOder.setRestaurant(restaurant);
-
-        Card card=cardService.findCardByUserId(user.getId());
-
-        List<OderItem> oderItems=new ArrayList<>();
-
-        for (CardItem cardItem: card.getItem()){
-            OderItem oderItem=new OderItem();
-            oderItem.setFood(cardItem.getFood());
-            oderItem.setIngredients(cardItem.getIngredients());
-            oderItem.setQuantity(cardItem.getQuantity());
-            oderItem.setTotalPrice(cardItem.getTotalPrice());
-
-            OderItem savedItem= oderItemRepositry.save(oderItem);
-            oderItems.add(savedItem);
-
-        }
-
-        Long totalPrice=cardService.calculateCardTotals(card);
-
-        createdOder.setItems(oderItems);
-        createdOder.setTotalPrice(totalPrice);
-
-        Oder savedOder=oderRepositry.save(createdOder);
-        restaurant.getOders().add(savedOder);
 
 
-        return  createdOder;
+            Oder createdOder = new Oder();
+            createdOder.setCustomer(user);
+            createdOder.setCreateAt(new Date());
+            createdOder.setOderStatus("PENDING");
+            createdOder.setDeliveryAddress(savedAddress);
+            createdOder.setRestaurant(restaurant);
+
+            Card card = cardService.findCardByUserId(user.getId());
+
+            List<OderItem> oderItems = new ArrayList<>();
+
+            for (CardItem cardItem : card.getItem()) {
+                OderItem oderItem = new OderItem();
+                oderItem.setFood(cardItem.getFood());
+                oderItem.setIngredients(cardItem.getIngredients());
+                oderItem.setQuantity(cardItem.getQuantity());
+                oderItem.setTotalPrice(cardItem.getTotalPrice());
+
+                OderItem savedItem = oderItemRepositry.save(oderItem);
+                oderItems.add(savedItem);
+            }
+
+            Long totalPrice = cardService.calculateCardTotals(card);
+
+            createdOder.setItems(oderItems);
+            createdOder.setTotalPrice(totalPrice);
+
+            Oder savedOder = oderRepositry.save(createdOder);
+            restaurant.getOders().add(savedOder);
+
+
+
+        return createdOder;
     }
 
     @Override

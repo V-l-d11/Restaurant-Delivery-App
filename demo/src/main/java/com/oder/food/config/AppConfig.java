@@ -28,7 +28,7 @@ public class AppConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/admin/**").hasAnyRole("RESTAURANT_OWNER", "ADMIN")
+                .antMatchers("/api/admin/**").hasAnyRole("RESTAURANT_OWNER", "ROLE_ADMIN")
                 .antMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
                 .and()

@@ -16,6 +16,7 @@ public class RestaurantCustomer {
     private String openingHours;
     private boolean open;
     private List<Food> foods;
+    private List<String> images;
 
 
 }
