@@ -6,11 +6,14 @@ import com.oder.food.model.IngridientsCategory;
 import com.oder.food.model.Restaurant;
 import com.oder.food.repository.IngridientItemRepositry;
 import com.oder.food.repository.IngridientsCategoryRepositry;
+import com.oder.food.requests.IngredientRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class IngridientsServiceImplementathion implements  IngredientsService {
@@ -24,6 +27,8 @@ public class IngridientsServiceImplementathion implements  IngredientsService {
 
     @Autowired
     private RestaurantService restaurantService;
+
+
 
 
 
@@ -47,6 +52,29 @@ public class IngridientsServiceImplementathion implements  IngredientsService {
             throw  new Exception("ingridients category not found");
         }
         return opt.get();
+    }  @Override
+    @Transactional
+    public IngridientsCategory createIngridientsCategory(String name , Long restaurantId, List<IngredientRequest> ingredients) throws  Exception{
+        Restaurant restaurant =restaurantService.findRestaurantById(restaurantId);
+
+        IngridientsCategory category= new IngridientsCategory();
+        category.setRestaurant(restaurant);
+        category.setName(name);
+        IngridientsCategory savedCategory= ingridientsCategoryRepositry.save(category);
+
+        if(ingredients != null && !ingredients.isEmpty()){
+            List<IngredientsItem> items= ingredients.stream().map(ingredientRequest -> {
+                IngredientsItem item= new IngredientsItem();
+                item.setName(ingredientRequest.getName());
+                item.setRestaurant(restaurant);
+                item.setCategory(savedCategory);
+                item.setPrice(ingredientRequest.getPrice());
+                return item;
+            }).collect(Collectors.toList());
+            ingridientItemRepositry.saveAll(items);
+            savedCategory.setIngredients(items);
+        }
+        return savedCategory;
     }
 
     @Override

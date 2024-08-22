@@ -3,6 +3,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.core.annotation.Order;
 
 import javax.persistence.*;
@@ -25,6 +26,7 @@ public class Restaurant {
     private Long id;
 
     @OneToOne
+    @ToString.Exclude
     private User owner;
 
     private String name;
@@ -56,5 +58,10 @@ public class Restaurant {
     @OneToMany(mappedBy ="restaurant", cascade = CascadeType.ALL)
     private List<Food> foods= new ArrayList<>();
 
+
+    @Override
+    public String toString() {
+        return "Restaurant{id=" + id + ", name='" + name + "', description='" + description + "'}";
+    }
 
 }

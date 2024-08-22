@@ -2,6 +2,7 @@ package com.oder.food.service;
 
 import com.oder.food.model.IngredientsItem;
 import com.oder.food.model.IngridientsCategory;
+import com.oder.food.requests.IngredientRequest;
 
 import java.util.List;
 
@@ -25,4 +26,5 @@ public interface IngredientsService {
 
      public void deleteIngredientItem(Long id) throws  Exception;
 
+    IngridientsCategory createIngridientsCategory(String name, Long restaurantId, List<IngredientRequest> ingredients) throws Exception;
 }

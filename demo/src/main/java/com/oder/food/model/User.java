@@ -6,6 +6,8 @@ import com.oder.food.dto.RestaurantDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import javax.persistence.ElementCollection;
 
 import javax.persistence.*;
@@ -38,11 +40,15 @@ public class User {
     private List<Oder> oders= new ArrayList<>();
 
     @ElementCollection
+    @ToString.Exclude
     private List<RestaurantDto>favorites= new ArrayList();
 
     @OneToMany(cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Address> adresses=new ArrayList<>();
 
-
+    @Override
+    public String toString() {
+        return "User{id=" + id + ", fullName='" + fullName + "', email='" + email + "'}";
+    }
 
 }

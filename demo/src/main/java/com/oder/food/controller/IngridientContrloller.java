@@ -21,6 +21,15 @@ public class IngridientContrloller {
     private IngredientsService ingredientsService;
 
 
+    @PostMapping("/category/ingridients/add")
+    public ResponseEntity<IngridientsCategory> createIngridientsCategory(
+            @RequestBody IngredientCategryRequest req
+    ) throws  Exception{
+        System.out.println(req + "REQUESRT");
+        IngridientsCategory category= ingredientsService.createIngridientsCategory(req.getName(),req.getRestaurantId(),req.getIngredients());
+        return  new ResponseEntity<>(category,HttpStatus.OK);
+    }
+
     @PostMapping("/category")
     public ResponseEntity<IngridientsCategory> createIngedientCategry(
             @RequestBody IngredientCategryRequest req
