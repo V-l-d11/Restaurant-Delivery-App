@@ -2,6 +2,7 @@ package com.oder.food.service;
 
 import com.oder.food.model.Category;
 import com.oder.food.model.Food;
+import com.oder.food.model.IngredientsItem;
 import com.oder.food.model.Restaurant;
 import com.oder.food.repository.FoodRepositry;
 import com.oder.food.requests.CreateFoodRequest;
@@ -22,7 +23,7 @@ public class FoodServiceImplementathion implements  FoodService {
 
 
     @Override
-    public Food createFood(CreateFoodRequest req, Category category, Restaurant restaurant) {
+    public Food createFood(CreateFoodRequest req, Category category, Restaurant restaurant,List<IngredientsItem> ingredients) {
 
         Food food= new Food();
         food.setFoodCategory(category);
@@ -31,7 +32,7 @@ public class FoodServiceImplementathion implements  FoodService {
         food.setImages(req.getImages());
         food.setName(req.getName());
         food.setPrice(req.getPrice());
-        food.setIngredients(req.getIngridients());
+        food.setIngredients(ingredients);
         food.setSeasonal(req.isSeasional());
         food.setVegetarian(req.isVegetarian());
 

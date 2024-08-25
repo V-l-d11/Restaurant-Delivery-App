@@ -27,4 +27,6 @@ public interface IngredientsService {
      public void deleteIngredientItem(Long id) throws  Exception;
 
     IngridientsCategory createIngridientsCategory(String name, Long restaurantId, List<IngredientRequest> ingredients) throws Exception;
+
+    IngredientsItem findIngredintById(Long id) throws  Exception;
 }

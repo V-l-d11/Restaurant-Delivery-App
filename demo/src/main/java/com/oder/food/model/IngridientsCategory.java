@@ -27,4 +27,11 @@ public class IngridientsCategory {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<IngredientsItem> ingredients=new ArrayList<>();
+
+
+    @Override
+    public String toString() {
+        return "IngridientsCategory{id=" + id + ", name='" + name + "'}";
+    }
+
 }

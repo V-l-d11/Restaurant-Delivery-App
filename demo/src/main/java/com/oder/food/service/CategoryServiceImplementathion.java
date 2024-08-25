@@ -62,8 +62,9 @@ public class CategoryServiceImplementathion implements  CategoryService {
     @Override
     public void deleteCategory(Long categoryId,Long userId) throws Exception{
         Category category= findCategoryById(categoryId);
+        System.out.println(category + "Category");
         Restaurant restaurant= restaurantService.getRestaurantByUserId(userId);
-
+        System.out.println(restaurant + "restaurant");
         if(!category.getRestaurant().getId().equals(restaurant.getId())){
             throw new  Exception("User does not have permission to delete this category");
         }

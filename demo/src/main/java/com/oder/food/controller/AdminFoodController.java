@@ -1,11 +1,13 @@
 package com.oder.food.controller;
 
 import com.oder.food.model.Food;
+import com.oder.food.model.IngredientsItem;
 import com.oder.food.model.Restaurant;
 import com.oder.food.model.User;
 import com.oder.food.requests.CreateFoodRequest;
 import com.oder.food.response.MassageResponse;
 import com.oder.food.service.FoodService;
+import com.oder.food.service.IngredientsService;
 import com.oder.food.service.RestaurantService;
 import com.oder.food.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/admin/food")
@@ -23,6 +26,9 @@ public class AdminFoodController {
 
     @Autowired
     private FoodService foodService;
+
+    @Autowired
+    private IngredientsService ingredientsService;
 
     @Autowired
     private UserService userService;
@@ -39,14 +45,20 @@ public class AdminFoodController {
         System.out.print(req + "All Request ---");
         Restaurant restaurant=restaurantService.findRestaurantById(req.getRestaurantid());
 
-        List<byte[]> decodedImages=new ArrayList<>();
-        for(String imageBase64: req.getImages()){
-            String base64Image= imageBase64.split(",")[1];
-            byte[] decodedImage= Base64.getDecoder().decode(base64Image);
-            decodedImages.add(decodedImage);
+        List<IngredientsItem> ingredients = new ArrayList<>();
+        if (req.getIngredientIds() != null) {
+            ingredients = req.getIngredientIds().stream()
+                    .map(id -> {
+                        try {
+                            return ingredientsService.findIngredintById(id);
+                        } catch (Exception e) {
+                            throw new RuntimeException("Ingredient not found with id: " + id, e);
+                        }
+                    })
+                    .collect(Collectors.toList());
         }
 
-        Food food=foodService.createFood(req, req.getCategory(),restaurant);
+        Food food = foodService.createFood(req, req.getCategory(), restaurant, ingredients);
         return new ResponseEntity<>(food, HttpStatus.CREATED);
     }
 

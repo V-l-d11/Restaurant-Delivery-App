@@ -141,4 +141,13 @@ public class IngridientsServiceImplementathion implements  IngredientsService {
         ingridientItemRepositry.delete(optionalItem.get());
     }
 
+    @Override
+    public IngredientsItem findIngredintById(Long id) throws Exception{
+        Optional<IngredientsItem> optionalIngredient = ingridientItemRepositry.findById(id);
+        if(optionalIngredient.isEmpty()){
+            throw new Exception("Ingridient not found with id" + id);
+        }
+        return optionalIngredient.get();
+    }
+
 }

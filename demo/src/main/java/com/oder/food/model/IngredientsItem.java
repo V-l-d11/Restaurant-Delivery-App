@@ -31,5 +31,11 @@ public class IngredientsItem {
 
     private Long price;
 
+    @Override
+    public String toString() {
+        return "IngredientsItem{id=" + id + ", name='" + name + "'}";
+    }
+
+
 
 }
