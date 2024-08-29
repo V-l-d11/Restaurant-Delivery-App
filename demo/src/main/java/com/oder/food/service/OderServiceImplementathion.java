@@ -6,10 +6,14 @@ import com.oder.food.repository.*;
 import com.oder.food.requests.OderRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import java.util.Date;
 
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @Service
 public class OderServiceImplementathion  implements  OderService{
@@ -110,17 +114,18 @@ public class OderServiceImplementathion  implements  OderService{
     }
 
     @Override
-    public List<Oder> getUsersOder(Long userId) throws Exception {
-        return oderRepositry.findByCustomerId(userId);
+    public Page<Oder> getUsersOder(Long userId, int page , int size) throws Exception {
+        Pageable pageable= PageRequest.of(page,size);
+        return oderRepositry.findByCustomerId(userId,pageable);
     }
 
     @Override
-    public List<Oder> getRestaurantsOder(Long restaurantId, String oderStatus) throws Exception {
-        List<Oder> orders= oderRepositry.findByRestaurantId(restaurantId);
-        if(oderStatus!=null){
-            orders=orders.stream().filter(order-> order.getOderStatus().equals(oderStatus)).collect(Collectors.toList());
+    public Page<Oder> getRestaurantsOder(Long restaurantId, String oderStatus, int page, int size) throws Exception {
+        Pageable pageable = PageRequest.of(page, size);
+        if (oderStatus == null) {
+            return oderRepositry.findByRestaurantId(restaurantId, pageable);
         }
-        return orders;
+        return oderRepositry.findByRestaurantIdAndOderStatus(restaurantId, oderStatus, pageable);
     }
 
     @Override
@@ -131,4 +136,12 @@ public class OderServiceImplementathion  implements  OderService{
         }
         return optionalOder.get();
     }
+
+    @Override
+    public Page<Oder> getOderByCreateAt(Date createAt, int page, int size) throws Exception {
+       Pageable pageable= PageRequest.of(page,size);
+        java.sql.Date sqlDate = new java.sql.Date(createAt.getTime());
+        return oderRepositry.findByCreateAt(sqlDate, pageable);
+    }
+
 }

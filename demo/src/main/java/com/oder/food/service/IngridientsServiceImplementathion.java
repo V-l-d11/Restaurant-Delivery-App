@@ -1,9 +1,11 @@
 package com.oder.food.service;
 
 
+import com.oder.food.model.Food;
 import com.oder.food.model.IngredientsItem;
 import com.oder.food.model.IngridientsCategory;
 import com.oder.food.model.Restaurant;
+import com.oder.food.repository.FoodRepositry;
 import com.oder.food.repository.IngridientItemRepositry;
 import com.oder.food.repository.IngridientsCategoryRepositry;
 import com.oder.food.requests.IngredientRequest;
@@ -18,6 +20,8 @@ import java.util.stream.Collectors;
 @Service
 public class IngridientsServiceImplementathion implements  IngredientsService {
 
+    @Autowired
+    private FoodRepositry foodRepository;
 
     @Autowired
     private IngridientItemRepositry ingridientItemRepositry;
@@ -138,6 +142,15 @@ public class IngridientsServiceImplementathion implements  IngredientsService {
         if(optionalItem.isEmpty()){
             throw  new Exception("Ingrdient item not found");
         }
+        IngredientsItem ingredient = optionalItem.get();
+
+        List<Food> foods = ingredient.getRestaurant().getFoods();
+        for(Food food: foods){
+            food.getIngredients().remove(ingredient);
+            foodRepository.save(food);
+
+        }
+
         ingridientItemRepositry.delete(optionalItem.get());
     }
 
