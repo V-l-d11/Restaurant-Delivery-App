@@ -28,4 +28,8 @@ public interface OderService {
 
     Page<Oder> getOderByCreateAt(Date createAt, int page, int size) throws Exception;
 
+    Page<Oder> getOdersByDateRange(Date startDate, Date endDate, int page, int size) throws  Exception;
+
+    Page<Oder> getOdersByCustomerFullName(String fullName,int page, int size) throws  Exception;
+
 }

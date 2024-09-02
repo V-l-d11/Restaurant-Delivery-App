@@ -10,6 +10,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 import java.util.*;
@@ -46,16 +50,11 @@ public class OderServiceImplementathion  implements  OderService{
 
         Address shippAddress=order.getDeliveryAddress();
         Address savedAddress=addresRepositry.save(shippAddress);
-
         if(!user.getAdresses().contains(savedAddress)){
             user.getAdresses().add(savedAddress);
           userRepository.save(user);
         }
-
-
         Restaurant restaurant= restaurantService.findRestaurantById(order.getRestaurantId());
-
-
 
             Oder createdOder = new Oder();
             createdOder.setCustomer(user);
@@ -74,7 +73,6 @@ public class OderServiceImplementathion  implements  OderService{
                 oderItem.setIngredients(cardItem.getIngredients());
                 oderItem.setQuantity(cardItem.getQuantity());
                 oderItem.setTotalPrice(cardItem.getTotalPrice());
-
                 OderItem savedItem = oderItemRepositry.save(oderItem);
                 oderItems.add(savedItem);
             }
@@ -137,11 +135,48 @@ public class OderServiceImplementathion  implements  OderService{
         return optionalOder.get();
     }
 
+//    @Override
+//    public Page<Oder> getOderByCreateAt(Date createAt, int page, int size) throws Exception {
+//       Pageable pageable= PageRequest.of(page,size);
+//        java.sql.Date sqlDate = new java.sql.Date(createAt.getTime());
+//        return oderRepositry.findByCreateAt(sqlDate, pageable);
+//    }
+
     @Override
     public Page<Oder> getOderByCreateAt(Date createAt, int page, int size) throws Exception {
-       Pageable pageable= PageRequest.of(page,size);
-        java.sql.Date sqlDate = new java.sql.Date(createAt.getTime());
-        return oderRepositry.findByCreateAt(sqlDate, pageable);
+        Pageable pageable = PageRequest.of(page, size);
+
+        LocalDate localDate = createAt.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        // Определение начала и конца дня
+        LocalDateTime startOfDay = localDate.atStartOfDay();
+        LocalDateTime endOfDay = localDate.plusDays(1).atStartOfDay();
+
+        // Преобразование LocalDateTime в Instant и затем в java.util.Date
+        Date startDate = Date.from(startOfDay.atZone(ZoneId.systemDefault()).toInstant());
+        Date endDate = Date.from(endOfDay.atZone(ZoneId.systemDefault()).toInstant());
+
+        // Преобразование в java.sql.Date
+        java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
+        java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
+
+        return oderRepositry.findByCreateAtBetween(sqlStartDate, sqlEndDate, pageable);
+    }
+
+
+    @Override
+    public Page<Oder> getOdersByDateRange(Date startDate, Date endDate, int page, int size ) throws Exception{
+        Pageable pageable=PageRequest.of(page,size);
+        java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
+        java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
+        return oderRepositry.findByCreateAtBetween(sqlStartDate, sqlEndDate, pageable);
+    }
+
+
+    @Override
+    public Page<Oder> getOdersByCustomerFullName(String fullName, int page, int size) throws Exception{
+        Pageable pageable=PageRequest.of(page,size);
+
+        return oderRepositry.findByCustomerFullNameContaining(fullName,pageable);
     }
 
 }

@@ -59,14 +59,53 @@ public class AdminOderController {
         return new ResponseEntity<>("Oder", HttpStatus.OK);
     }
 
+//    @GetMapping("/oder/date")
+//    public Page<Oder> getOrdersByCreateAt(
+//            @RequestParam("createAt") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createAt,
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "10") int size) throws Exception {
+//
+//        Date utilDate = Date.from(createAt.atStartOfDay(ZoneId.systemDefault()).toInstant());
+//        return oderService.getOderByCreateAt(utilDate, page,size);
+//    }
+
+
     @GetMapping("/oder/date")
-    public Page<Oder> getOrdersByCreateAt(
+    public  ResponseEntity<Page<Oder>> getOrdersByCreateAt(
             @RequestParam("createAt") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createAt,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) throws Exception {
+        Date start = Date.from(createAt.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date end = Date.from(createAt.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Page<Oder> oders= oderService.getOdersByDateRange(start,end ,page,size);
 
-        Date utilDate = Date.from(createAt.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        return oderService.getOderByCreateAt(utilDate, page,size);
+        return  new ResponseEntity<>(oders, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/oder/date-range")
+    public Page<Oder> getOdersByDateRange(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+
+    ) throws  Exception{
+        Date start = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date end = Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        return oderService.getOdersByDateRange(start, end, page,size);
+    }
+
+    @GetMapping("/oder/customer/")
+    public ResponseEntity<Page<Oder>> getCustomerOders(
+            @RequestParam String fullName,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestHeader("Authorization") String jwt
+    ) throws Exception{
+        User user = userService.findUserByJwtToken(jwt);
+        Page<Oder> orders= oderService.getOdersByCustomerFullName(fullName, page,size);
+        return new ResponseEntity<>(orders,HttpStatus.OK);
     }
 
 }
