@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface OderService {
 
@@ -31,5 +32,8 @@ public interface OderService {
     Page<Oder> getOdersByDateRange(Date startDate, Date endDate, int page, int size) throws  Exception;
 
     Page<Oder> getOdersByCustomerFullName(String fullName,int page, int size) throws  Exception;
+
+    public Map<String,Long> getOrderStatusSummary(Long restaurantId) throws Exception;
+
 
 }

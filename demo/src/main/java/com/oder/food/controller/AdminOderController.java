@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -106,6 +107,18 @@ public class AdminOderController {
         User user = userService.findUserByJwtToken(jwt);
         Page<Oder> orders= oderService.getOdersByCustomerFullName(fullName, page,size);
         return new ResponseEntity<>(orders,HttpStatus.OK);
+    }
+
+
+    @GetMapping("/oder/status-summary")
+    public ResponseEntity<Map<String,Long>> getOdersStatusSummary(
+           @RequestParam Long restaurantId,
+            @RequestHeader("Authorization") String jwt
+    )throws Exception{
+        User user = userService.findUserByJwtToken(jwt);
+        Map<String,Long> statusSummary= oderService.getOrderStatusSummary(restaurantId);
+
+        return new ResponseEntity<>(statusSummary,HttpStatus.OK);
     }
 
 }

@@ -179,4 +179,18 @@ public class OderServiceImplementathion  implements  OderService{
         return oderRepositry.findByCustomerFullNameContaining(fullName,pageable);
     }
 
+
+    @Override
+    public Map<String,Long> getOrderStatusSummary(Long restaurantId) throws Exception{
+        List<Object[]> results=oderRepositry.countOrdersByStatusForRestaurant(restaurantId);
+        Map<String,Long> statusSummary = new HashMap<>();
+
+        for(Object[] result: results){
+            String status= (String) result[0];
+            Long count= (Long) result[1];
+            statusSummary.put(status,count);
+        }
+        return statusSummary;
+    }
+
 }
