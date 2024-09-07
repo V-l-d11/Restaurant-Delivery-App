@@ -31,5 +31,9 @@ public interface OderRepositry extends JpaRepository<Oder,Long> {
     @Query("SELECT o.oderStatus, COUNT(o) FROM Oder o WHERE o.restaurant.id = :restaurantId GROUP BY o.oderStatus")
     List<Object[]> countOrdersByStatusForRestaurant(@Param("restaurantId") Long restaurantId);
 
+    // Пример JPQL запроса с проверкой на null
+    @Query("SELECT o FROM Oder o WHERE o.restaurant.id = :restaurantId AND o.totalPrice BETWEEN :minPrice AND :maxPrice")
+    Page<Oder> findByRestaurantIdAndTotalPriceBetween(Long restaurantId, Long minPrice, Long maxPrice, Pageable pageable);
+
 
 }

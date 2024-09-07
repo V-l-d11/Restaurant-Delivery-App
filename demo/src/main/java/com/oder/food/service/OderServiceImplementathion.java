@@ -193,4 +193,11 @@ public class OderServiceImplementathion  implements  OderService{
         return statusSummary;
     }
 
+    @Override
+    public Page<Oder> getOdersByTotalPriceRange(Long restaurantId,long minPrice, long maxPrice, int page,int size) throws Exception{
+        Pageable pageable=PageRequest.of(page,size);
+        return oderRepositry.findByRestaurantIdAndTotalPriceBetween(restaurantId,minPrice,maxPrice,pageable);
+
+    }
+
 }

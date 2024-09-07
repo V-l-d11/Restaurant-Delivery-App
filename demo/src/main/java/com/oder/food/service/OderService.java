@@ -35,5 +35,5 @@ public interface OderService {
 
     public Map<String,Long> getOrderStatusSummary(Long restaurantId) throws Exception;
 
-
+    public Page<Oder> getOdersByTotalPriceRange(Long resstaurantId, long minPrice,long maxPrice, int page, int size) throws  Exception;
 }

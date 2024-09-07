@@ -1,9 +1,12 @@
 package com.oder.food.controller;
 import com.oder.food.model.Oder;
+import com.oder.food.model.Restaurant;
 import com.oder.food.model.User;
 import com.oder.food.requests.OderRequest;
 import com.oder.food.service.OderService;
+import com.oder.food.service.RestaurantService;
 import com.oder.food.service.UserService;
+import io.swagger.models.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +30,9 @@ public class AdminOderController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RestaurantService restaurantService;
 
     @GetMapping("/oder/restaurant/{id}")
     public ResponseEntity<Page<Oder>> getOderHistory(
@@ -119,6 +125,21 @@ public class AdminOderController {
         Map<String,Long> statusSummary= oderService.getOrderStatusSummary(restaurantId);
 
         return new ResponseEntity<>(statusSummary,HttpStatus.OK);
+    }
+
+    @GetMapping("/oder/price-range")
+    public ResponseEntity<Page<Oder>> getOdersByPriceRange(
+            @RequestParam Long restaurantId,
+            @RequestParam Long price,
+    @RequestParam(defaultValue = "0") int page,
+    @RequestParam(defaultValue="10") int size,
+             @RequestHeader("Authorization") String jwt) throws Exception
+    {
+        User user=userService.findUserByJwtToken(jwt);
+        long maxPrice=price +10;
+        long minPrice= price -10;
+        Page<Oder> orders=oderService.getOdersByTotalPriceRange(restaurantId,minPrice,maxPrice,page,size);
+        return new ResponseEntity<>(orders,HttpStatus.OK);
     }
 
 }
