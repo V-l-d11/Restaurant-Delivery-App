@@ -66,16 +66,6 @@ public class AdminOderController {
         return new ResponseEntity<>("Oder", HttpStatus.OK);
     }
 
-//    @GetMapping("/oder/date")
-//    public Page<Oder> getOrdersByCreateAt(
-//            @RequestParam("createAt") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createAt,
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "10") int size) throws Exception {
-//
-//        Date utilDate = Date.from(createAt.atStartOfDay(ZoneId.systemDefault()).toInstant());
-//        return oderService.getOderByCreateAt(utilDate, page,size);
-//    }
-
 
     @GetMapping("/oder/date")
     public  ResponseEntity<Page<Oder>> getOrdersByCreateAt(
